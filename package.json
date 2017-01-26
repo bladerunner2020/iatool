@@ -1,0 +1,14 @@
+{
+  "name": "iadea-tools",
+  "version": "1.0.0",
+  "description": "",
+  "main": "iatool.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Alexander Pivovarov",
+  "license": "MIT",
+  "dependencies": {
+    "columnify": "^1.5.4"
+  }
+}
