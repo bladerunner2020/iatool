@@ -9,6 +9,8 @@
   "author": "Alexander Pivovarov",
   "license": "MIT",
   "dependencies": {
-    "columnify": "^1.5.4"
+    "columnify": "^1.5.4",
+    "commander": "^2.9.0",
+    "iadea-rest": "git+https://bladerunner2020@bitbucket.org/bladerunner2020/iadea-rest.git"
   }
 }
