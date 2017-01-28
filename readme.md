@@ -9,13 +9,13 @@ npm install --global iadea-tool
 ```
 
 ### Usage examples ###
-Usage: node iatool [command] [options]
+Usage: node iatool iadea_host [command] [options]
 
 To get full list of commands run:
 
-node iatool --hlep
+node iatool --help
 
-  Usage: iatool [options] [command]
+  Usage: iatool iadea_host [options] [command]
 
   Commands:
 

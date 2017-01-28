@@ -1,9 +1,10 @@
 {
-  "name": "iadea-tools",
+  "name": "iadea-tool",
   "version": "1.0.0",
   "description": "Command line tool to control Iadea players and signboards.",
   "main": "iatool.js",
   "scripts": {
+    "start": "node iatool.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Alexander Pivovarov <pivovarov@gmail.com>",
@@ -11,6 +12,9 @@
   "keywords": [
     "iadea"
   ],
+  "bin": {
+    "iatool": "./iatool.js"
+  },
   "dependencies": {
     "columnify": "^1.5.4",
     "commander": "^2.9.0",
