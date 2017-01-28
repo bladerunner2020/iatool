@@ -3,24 +3,27 @@
 A command line tool for Iadea players and signboards.
 
 ### Installation ###
-
-```sh
+To use iadea-tool [NODE.JS](https://nodejs.org/) should be installed.
+To install iadea-tool:
+```
 npm install --global iadea-tool
 ```
 
 ### Usage examples ###
-Usage: node iatool iadea_host [command] [options]
+Usage: 
 
-To get full list of commands run:
+```
+$ iatool host [command] [options]
+```
 
-node iatool --help
+host - ip address of IAdea media player or signboard. 
+NOTE: if IADEA_HOST is specified as an environment variable or in .ENV file, host argument may be omitted.
 
-  Usage: iatool iadea_host [options] [command]
+**commands**
 
-  Commands:
-
+```
     info                          show information on the player
-    list [options] [filter]       display file list
+    list [options] [filter]       display file list.
     play <file>                   play a media or smil file
     display <status>              turn display on/off
     switch                        switch to play default content 
@@ -28,11 +31,14 @@ node iatool --help
     fallback <file>               set content to play on critical errors 
     remove [options] [file]       remove file(s) matching criteria
     upload <source> [destinatio]  upload file
+```
 
-  Options:
+*command: info*
 
-    -h, --help  output usage information
-   
+
+
+
+
 
 ### Contribution ###
 
