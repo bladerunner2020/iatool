@@ -83,19 +83,22 @@ If more then one files match the criteria only one will be played.
 
 Examples:
 
-```iatool <host> play media/image1.jpg
+```
+iatool <host> play media/image1.jpg
 iatool 192.168.2.12 play media/image1.jpg
 Playing: http://localhost:8080/v2/user-data/media/image1.jpg
 ```
 
-```iatool <host> play video.mp4
+```
+iatool <host> play video.mp4
 iatool 192.168.2.12 play media/video.mp4
 Playing: http://localhost:8080/v2/user-data/media/video.mp4
 ```
 
 To play external URL:
 
-```iatool <host> play http://www.auvix.ru
+```
+iatool <host> play http://www.auvix.ru
 Playing: http://www.auvix.ru
 ```
 
