@@ -31,14 +31,16 @@ NOTE: if IADEA_HOST is specified as an environment variable or in .ENV file, hos
 ```
 
 ```iatool <host> info```
+
 show information on the player (model, firmware, storage, etc).
 
 ```iatool <host> list [options] [filter]```
+
 Display list of files on the player. If optional parameter *filter* is specified, only files that contains *filter* are listed.
 It is possible to specify the information that should be displayed on each file.
 
 The followin otions are available:
-```  
+    ```  
     -h, --help             output usage information
     -p, --downloadPath     add downloadPath to the list
     -i, --id               add file id to the list
@@ -49,6 +51,7 @@ The followin otions are available:
     -m, --modifiedDate     add modifiedDate to the list
     -c, --completed        add completed flag to the list
     ```
+
 The default options are *-psc*.
 
 Example:
@@ -71,6 +74,7 @@ Total: 9 file(s). Size: 2.55 Gb (2737081404 bytes)
     ```
 
 ```iatool <host> play <file>```
+
 Play specified file or external URL once. It could be a media file, SMIL playlist or html-page.
 It's possible to specify full path or file name or part of file name. 
 If more then one files match the criteria only one will be played.
