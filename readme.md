@@ -1,12 +1,13 @@
 # README #
 
-A command line tool for Iadea players and signboards.
+A command line tool for IAdea players and signboards.
 
 ### Installation ###
 To use iadea-tool [NODE.JS](https://nodejs.org/) should be installed.
+
 To install iadea-tool:
 ```
-npm install --global iadea-tool
+    $ npm install --global iadea-tool
 ```
 
 ### Usage examples ###
@@ -16,6 +17,7 @@ host - ip address of IAdea media player or signboard.
 **NOTE:** if *IADEA_HOST* is specified as an environment variable or in **.ENV** file, host argument may be omitted.
 
 **commands**
+
 List of available commands:
 ```
     info                           show information on the player
