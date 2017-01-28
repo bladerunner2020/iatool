@@ -93,7 +93,7 @@ program
     .action(removeFile)
     .description('remove file(s) matching criteria')
     .option('-i, --id', 'remove file by id')
-    .option('-n, --incomplete', 'remove all icnomplete files');
+    .option('-n, --incomplete', 'remove all incomplete files');
 
 program
     .command('upload <source> [destination]')
@@ -310,7 +310,7 @@ function playFile(file) {
 }
 
 /**
- * Switch displa on/off
+ * Switch display on/off
  * @param {String} status 'on' to switch on
  */
 function displayOn(status) {
@@ -354,8 +354,13 @@ function setStart(file, fallback) {
     }
 
     return connect()
-        .then(function () {return iadea.findFileByName(file);})
-        .then(function (data) { return iadea.setStart(data.downloadPath, fallback);})
+        .then(function () {
+            if (!file.includes('http'))
+                return iadea.findFileByName(file);
+            return file;
+        })
+        .then(function (data) {
+            return iadea.setStart(data.downloadPath || data, fallback);})
         .then(logResults)
         .catch(logError);
 
@@ -390,7 +395,7 @@ function removeFile(file, options) {
             .then(function () {
                 return iadea.deleteFiles(file)
             })
-            .then(console.log)
+            // .then(console.log)
             .catch(logError);
     }
     
@@ -400,7 +405,7 @@ function removeFile(file, options) {
         return connect()
             .then (function () {return iadea.getFileList(false, 'completed'); })
             .then(iadea.deleteFiles)
-            .then(console.log)
+            // .then(console.log)
             .catch(logError);
     }
     
@@ -408,7 +413,7 @@ function removeFile(file, options) {
     return connect()
         .then(function () {return iadea.getFileList(file);})
         .then(iadea.deleteFiles)
-        .then(console.log)
+        // .then(console.log)
         .catch(logError);
     
 }

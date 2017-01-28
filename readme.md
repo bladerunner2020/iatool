@@ -21,15 +21,6 @@ NOTE: if IADEA_HOST is specified as an environment variable or in .ENV file, hos
 
 **commands**
 
-```
-    display <status>              turn display on/off
-    switch                        switch to play default content 
-    autostart <file>              set default content to play each time player boots up 
-    fallback <file>               set content to play on critical errors 
-    remove [options] [file]       remove file(s) matching criteria
-    upload <source> [destinatio]  upload file
-```
-
 ```iatool <host> info```
 
 show information on the player (model, firmware, storage, etc).
@@ -39,7 +30,7 @@ show information on the player (model, firmware, storage, etc).
 Display list of files on the player. If optional parameter *filter* is specified, only files that contains *filter* are listed.
 It is possible to specify the information that should be displayed on each file.
 
-The following otions are available:
+The following options are available:
 
 ```  
     -h, --help             output usage information
@@ -102,6 +93,84 @@ iatool <host> play http://www.auvix.ru
 Playing: http://www.auvix.ru
 ```
 
+```iatool <host> switch```
+
+Switch to play the default content (it can be set with autostart command).
+
+```iatool <host> remove [options] [file]```
+
+Remove file(s) matching the criteria. If no options set it searches for files matching *<file>* and remove them.
+Available options:
+
+```
+    -h, --help        output usage information
+    -i, --id          remove file by id
+    -n, --incomplete  remove all incomplete files
+```
+
+Examples:
+
+```
+iatool <host> remove --id E4A7E415121366A8453916ECD6FBF144
+Removing file by id: E4A7E415121366A8453916ECD6FBF144
+```
+
+Remove file with specified ID. ID could be determined by list command (```iatool <host> list -pic```).
+
+```
+iatool <host> remove --incomplete                         
+Removing all incomplete files.
+```
+
+Remove all files with flag *complete* set to false.
+
+```iatool <host> <source> [destination]```
+
+Upload specified file (<source>) to IAdea media player.
+If [destination] is not specified the file will keep the name of ordinal file.
+By default all media files (images, videos, etc.) are uploaded to \media\ folder.
+The target folder could be se in [destination].
+
+Examples:
+
+```
+node iatool upload video.smil smil/
+```
+
+Upload video.smil to /smil/video.smil.
+
+
+```
+node iatool upload video.mp4
+```
+
+Upload video.mp4 to /media/video.mp4
+
+```iatool <host> autostart <file>```
+
+Set default content to play each time player boots up.
+See the description of **play** command for more details.
+
+```iatool <host> fallback <file>```
+
+Set the content to play on critical errors.
+See the description of **play** command for more details.
+
+```iatool <host> display <status>```
+
+<status> could be *on* or *off*. Turn display on or off.
+
+Example:
+
+```
+iatool <host> display off    
+Current display status: on
+Turn display: off
+```
+
+```iatool <host> reboot```
+
+Reboot player.
 
 
 
