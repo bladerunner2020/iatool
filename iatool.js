@@ -69,11 +69,6 @@ program
     .description('play a local file or an external URL');
 
 program
-    .command('display <status>')
-    .action(displayOn)
-    .description('turn display on/off');
-
-program
     .command('switch')
     .action(switchDefault)
     .description('switch to play default content ');
@@ -100,6 +95,11 @@ program
     .command('fallback <file>')
     .action(setFallback)
     .description('set content to play on critical errors ');
+
+program
+    .command('display <status>')
+    .action(displayOn)
+    .description('turn display on/off');
 
 program
     .command('reboot')
@@ -495,6 +495,9 @@ function uploadFile(source, destination) {
         .catch(logError);
 }
 
+/**
+ * Reboot player.
+ */
 function rebootPlayer() {
     consol.log('Rebooting player');
 

@@ -21,24 +21,24 @@ List of available commands:
     info                           show information on the player
     list [options] [filter]        display file list.
     play <file>                    play a local file or an external URL
-    display <status>               turn display on/off
     switch                         switch to play default content 
     remove [options] [file]        remove file(s) matching criteria
     upload <source> [destination]  upload file
     autostart <file>               set default content to play each time player boots up 
     fallback <file>                set content to play on critical errors 
+    display <status>               turn display on/off
     reboot                         reboot player
 ```
 
 **iatool info**
 
-Usage: ```iatool <host> info```
+Usage: ```$ iatool <host> info```
 
 show information on the player (model, firmware, storage, etc).
 
 **iatool list**
 
-Usage: ```iatool <host> list [options] [filter]```
+Usage: ```$ iatool <host> list [options] [filter]```
 
 Display list of files on the player. If optional parameter *filter* is specified, only files that contains *filter* are listed.
 It is possible to specify the information that should be displayed on each file.
@@ -81,7 +81,7 @@ The default options are *-psc*.
 
 **iatoop play**
 
-Usage: ```iatool <host> play <file>```
+Usage: ```$ iatool <host> play <file>```
 
 Play specified file or external URL once. It could be a media file, SMIL playlist or html-page.
 It's possible to specify full path or file name or part of file name. 
@@ -91,33 +91,34 @@ If more then one files match the criteria only one will be played.
 *Examples:*
 
 ```
-    iatool <host> play media/image1.jpg
-    iatool 192.168.2.12 play media/image1.jpg
+    $ iatool <host> play media/image1.jpg
+    
     Playing: http://localhost:8080/v2/user-data/media/image1.jpg
 ```
 
 ```
-    iatool <host> play video.mp4
-    iatool 192.168.2.12 play media/video.mp4
+    $ iatool <host> play video.mp4
+    
     Playing: http://localhost:8080/v2/user-data/media/video.mp4
 ```
 
 To play external URL:
 
 ```
-    iatool <host> play http://www.auvix.ru
+    $ iatool <host> play http://www.auvix.ru
+    
     Playing: http://www.auvix.ru
 ```
 
 **iatool switch**
 
-Usage: ```iatool <host> switch```
+Usage: ```$ iatool <host> switch```
 
 Switch to play the default content (it can be set with autostart command).
 
 **iatool remove**
 
-Usage: ```iatool <host> remove [options] [file]```
+Usage: ```$ iatool <host> remove [options] [file]```
 
 Remove file(s) matching the criteria. If no options set it searches for files matching *<file>* and remove them.
 Available options:
@@ -131,14 +132,16 @@ Available options:
 *Examples:*
 
 ```
-    iatool <host> remove --id E4A7E415121366A8453916ECD6FBF144
+    $ iatool <host> remove --id E4A7E415121366A8453916ECD6FBF144
+    
     Removing file by id: E4A7E415121366A8453916ECD6FBF144
 ```
 
-Remove file with specified ID. ID could be determined by list command (```iatool <host> list -pic```).
+Remove file with specified ID. ID could be determined by list command (```$ iatool <host> list -pic```).
 
 ```
-    iatool <host> remove --incomplete                         
+    $ iatool <host> remove --incomplete                         
+    
     Removing all incomplete files.
 ```
 
@@ -146,7 +149,7 @@ Remove all files with flag *complete* set to false.
 
 **iatool upload**
 
-Usage: ```iatool <host> upload <source> [destination]```
+Usage: ```$ iatool <host> upload <source> [destination]```
 
 Upload specified file (<source>) to IAdea media player.
 If [destination] is not specified the file will keep the name of ordinal file.
@@ -156,52 +159,52 @@ The target folder could be se in [destination].
 *Examples:*
 
 ```
-    node iatool upload video.smil smil/
+    $ iatool upload video.smil smil/
 ```
 
-Upload video.smil to /smil/video.smil.
+Upload *video.smil* to */smil/video.smil*.
 
 
 ```
-    node iatool upload video.mp4
+    $ iatool upload video.mp4
 ```
 
-Upload video.mp4 to /media/video.mp4
+Upload *video.mp4* to */media/video.mp4*.
 
-**iatool autostart*
+**iatool autostart**
 
-Usage: ```iatool <host> autostart <file>```
+Usage: ```$ iatool <host> autostart <file>```
 
 Set default content to play each time player boots up.
 See the description of **play** command for more details.
 
 **iatool fallback**
 
-Usage: ```iatool <host> fallback <file>```
+Usage: ```$ iatool <host> fallback <file>```
 
 Set the content to play on critical errors.
 See the description of **play** command for more details.
 
 **iatool display**
 
-Usage: ```iatool <host> display <status>```
+Usage: ```$ iatool <host> display <status>```
 
 *<status>* could be *on* or *off*. Turn display on or off.
 
 *Example:*
 
 ```
-    iatool <host> display off    
+    $ iatool <host> display off   
+     
     Current display status: on
     Turn display: off
 ```
 
 **iatool reboot**
 
-Usage: ```iatool <host> reboot```
+Usage: ```$ iatool <host> reboot```
 
 Reboot player.
-
 
 
 ### Contribution ###
