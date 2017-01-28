@@ -1,17 +1,40 @@
 #!/usr/bin/env node 
 
+/*!
+ * Iadea command line tool
+ * Copyright(c) 2017 Alexander Pivovarov
+ * pivovarov@gmail.com
+ * MIT Licensed
+ *
+ * To see commands and options run: node iatool --help
+ *
+ */
+
+require('dotenv').config(); // should be on top
 var iadea =require('iadea-rest');
 var program = require('commander');
 var columnify = require('columnify');
+var path = require('path');
+var ProgressBar = require('progress');
+
+// TOOL_IADEA_HOST could be specified as an environment variable
+// or in .ENV file
+var iadea_ip = process.env.TOOL_IADEA_HOST;
 
 
-var iadea_ip = null;
+// If iadea IP is set we should parse it and remove from process.argv
+// before program.parse(process.argv) is called
+var argv = process.argv;
 
-if (isURL(process.argv[2])) {
-    iadea_ip = process.argv[2];
-    process.argv.splice(2, 1);
+// If IP address is specified it should be first argument
+// check if first argument is valid IP address
+// Note: domain names are not supported.
+if (ValidateIPaddress(argv[2])) {
+    iadea_ip = argv[2];
+    argv.splice(2, 1);
 }
 
+// Add commands and opitons processing
 program
     .command('info')
     .action(showInfo)
@@ -55,17 +78,21 @@ program
     .action(setFallback)
     .description('set content to play on critical errors ');
 
-program.parse(process.argv);
+program
+    .command('remove [file]')
+    .action(removeFile)
+    .description('remove file(s) matching criteria')
+    .option('-i, --id', 'remove file by id')
+    .option('-n, --incomplete', 'remove all icnomplete files');
 
-function isURL(str) {
-    var pattern = new RegExp('^(https?:\\/\\/)?' + // protocol
-        '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.?)+[a-z]{2,}|' + // domain name
-        '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
-        '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
-        '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
-        '(\\#[-a-z\\d_]*)?$', 'i'); // fragment locator
-    return pattern.test(str);
-}
+program
+    .command('upload <source> [destination')
+    .action(uploadFile)
+    .description('upload file');
+
+
+program.parse(argv);
+
 
 
 // First, checks if it isn't implemented yet.
@@ -81,10 +108,27 @@ if (!String.prototype.format) {
     };
 }
 
+/**
+ * Check if string is valid IP address
+ * @param {String} ipaddress
+ * @return {Boolean}
+ */
+function ValidateIPaddress(ipaddress) {
+    return (/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(ipaddress));
+}
+
+/**
+ * Check if string is valid IP address
+ * @promise {String} access token
+ */
 function connect() {
     return iadea.connect(iadea_ip);
 }
 
+/**
+ * log error message in console log
+ * @param {Error} err
+ */
 function logError(err) {
     var message = err;
     if (err.message) message = err.message;
@@ -97,7 +141,9 @@ function logError(err) {
     console.log(message);
 }
 
-
+/**
+ * Display information about Iadea device and storage
+ */
 function showInfo() {
     var info = [];
 
@@ -148,6 +194,11 @@ function showInfo() {
 
 }
 
+/**
+ * Display list of files matching criteria
+ * @param {String} filter - shows only files that include filter
+ * @param {Object} options specify which columns to show
+ */
 function showFiles(filter, options) {
     function logFiles(data) {
         var files = data.items;
@@ -199,7 +250,10 @@ function showFiles(filter, options) {
         .catch(logError);
 }
 
-
+/**
+ * Play file
+ * @param {String} file
+ */
 function playFile(file) {
 
     function PlayFile(file) {
@@ -218,6 +272,10 @@ function playFile(file) {
 
 }
 
+/**
+ * Switch displa on/off
+ * @param {String} status 'on' to switch on
+ */
 function displayOn(status) {
     function log(data) {
         console.log('Current display status: ' + data[0].power);
@@ -232,6 +290,9 @@ function displayOn(status) {
         .catch(logError);
 }
 
+/**
+ * Play default content (e.g. set by setStart function)
+ */
 function switchDefault() {
     function logResults(data) {
         console.log("Playing: " + data.uri);
@@ -244,6 +305,11 @@ function switchDefault() {
 
 }
 
+/**
+ * Set default content to play each time player boots up or fallback content
+ * @param {String} file
+ * @param {Boolean} fallback
+ */
 function setStart(file, fallback) {
     function logResults(data) {
         var message = fallback ? "Fallback: " : "Autostart: " + data.uri;
@@ -258,10 +324,131 @@ function setStart(file, fallback) {
 
 }
 
+/**
+ * Set default content to play each time player boots up
+ */
 function setAutostart(file) {
     return setStart(file, false);
 }
 
+/**
+ * Set fallback content to play if error happnes
+ */
 function setFallback(file) {
     return setStart(file, true);
+}
+
+/**
+ * Remove file(s) matching criteria
+ * @param {String} file - filename or criteria
+ * @param {Object} options (mimeType, completed)
+ */
+
+function removeFile(file, options) {
+
+    if (options.id) {
+        console.log('Removing file by id: ' + file);
+        
+        return connect()
+            .then(function () {
+                return iadea.deleteFiles(file)
+            })
+            .then(console.log)
+            .catch(logError);
+    }
+    
+    if (options.incomplete) {
+        console.log('Removing all incomplete  files.');
+
+        return connect()
+            .then (function () {return iadea.getFileList(false, 'completed'); })
+            .then(iadea.deleteFiles)
+            .then(console.log)
+            .catch(logError);
+    }
+    
+
+    return connect()
+        .then(function () {return iadea.getFileList(file);})
+        .then(iadea.deleteFiles)
+        .then(console.log)
+        .catch(logError);
+    
+}
+
+var bar = null;
+var last_done = 0;
+function _logProgress(data) {
+ //   process.stdout.write('Downloading ' + data.done of data.size... \r');
+
+    // If file is uploaded in one go skip progress bar
+    if ((bar == null) && (data.percent == 1)) return;
+
+    if (!bar)
+        bar = new ProgressBar('Uploading :current [:bar] :percent :etas', {
+            complete: '█',
+            incomplete: '░',
+            width: 20,
+            total: data.size
+        });
+
+
+    bar.tick(data.done - last_done);
+    last_done = data.done;
+}
+
+/**
+ * Upload file
+ * @param {String} source - file to upload
+ * @param {String} destination - optional
+ */
+function uploadFile(source, destination) {
+    var filename = source.replace(/^.*(\\|\/|\:)/, '');
+    var extension = filename.split('.').pop();
+
+    var downloadPath = destination;
+    if (typeof(downloadPath) === 'undefined') {downloadPath = filename;}
+
+    var dest_filename = downloadPath.replace(/^.*(\\|\/|\:)/, '');
+    var dest_path = downloadPath;
+    if (dest_filename != '')
+        dest_path = downloadPath.substring(0, downloadPath.indexOf(dest_filename));
+
+    if (dest_path == '')
+        switch (extension) {
+            case 'jpg':
+            case'jpeg':
+            case 'png' :
+            case 'mp4':
+            case "mpe":
+            case "mpeg":
+            case "mpg":
+            case "avi":
+            case "wmv":
+            case "divx":
+            case "mov":
+            case "mp3":
+            case "txt":
+                dest_path = dest_path + 'media/';
+                break;
+            case 'smil':
+            case 'smi':
+                break;
+            default:
+
+        }
+
+    dest_path = '/user-data/' + dest_path;
+
+    if (dest_filename == '') dest_filename = filename;
+
+    path.normalize(dest_path);
+
+    console.log('Uploading ' + filename + ' to ' + dest_path + dest_filename + '...');
+
+    return connect()
+        .then(function() {return iadea.uploadFile(source, dest_path + dest_filename);})
+        .progress(_logProgress)
+        .then(console.log)
+        .catch(logError);
 }
