@@ -39,8 +39,9 @@ show information on the player (model, firmware, storage, etc).
 Display list of files on the player. If optional parameter *filter* is specified, only files that contains *filter* are listed.
 It is possible to specify the information that should be displayed on each file.
 
-The followin otions are available:
-    ```  
+The following otions are available:
+
+```  
     -h, --help             output usage information
     -p, --downloadPath     add downloadPath to the list
     -i, --id               add file id to the list
@@ -50,7 +51,7 @@ The followin otions are available:
     -d, --createdDate      add createdDate to the list
     -m, --modifiedDate     add modifiedDate to the list
     -c, --completed        add completed flag to the list
-    ```
+```
 
 The default options are *-psc*.
 
