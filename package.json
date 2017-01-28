@@ -1,16 +1,21 @@
 {
   "name": "iadea-tools",
   "version": "1.0.0",
-  "description": "",
+  "description": "Command line tool to control Iadea players and signboards.",
   "main": "iatool.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Alexander Pivovarov",
+  "author": "Alexander Pivovarov <pivovarov@gmail.com>",
   "license": "MIT",
+  "keywords": [
+    "iadea"
+  ],
   "dependencies": {
     "columnify": "^1.5.4",
     "commander": "^2.9.0",
-    "iadea-rest": "git+https://bladerunner2020@bitbucket.org/bladerunner2020/iadea-rest.git"
+    "dotenv": "^4.0.0",
+    "iadea-rest": "git+https://bladerunner2020@bitbucket.org/bladerunner2020/iadea-rest.git",
+    "progress": "^1.1.8"
   }
 }
