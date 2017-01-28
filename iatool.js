@@ -78,15 +78,6 @@ program
     .action(switchDefault)
     .description('switch to play default content ');
 
-program
-    .command('autostart <file>')
-    .action(setAutostart)
-    .description('set default content to play each time player boots up ');
-
-program
-    .command('fallback <file>')
-    .action(setFallback)
-    .description('set content to play on critical errors ');
 
 program
     .command('remove [file]')
@@ -101,6 +92,16 @@ program
     .description('upload file');
 
 program
+    .command('autostart <file>')
+    .action(setAutostart)
+    .description('set default content to play each time player boots up ');
+
+program
+    .command('fallback <file>')
+    .action(setFallback)
+    .description('set content to play on critical errors ');
+
+program
     .command('reboot')
     .action(rebootPlayer)
     .description('reboot player');
@@ -113,8 +114,7 @@ program.on('--help', function(){
     console.log('  $ iatool list -help');
     console.log('  $ iatool 192.168.1.111 info');
     console.log();
-
-
+    
     console.log('  Environment variables:');
     console.log('');
     console.log('    IADEA_HOST=' + process.env.IADEA_HOST);
