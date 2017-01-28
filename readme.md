@@ -21,11 +21,16 @@ NOTE: if IADEA_HOST is specified as an environment variable or in .ENV file, hos
 
 **commands**
 
-```iatool <host> info```
+
+**command: iatool info**
+
+Usage: ```iatool <host> info```
 
 show information on the player (model, firmware, storage, etc).
 
-```iatool <host> list [options] [filter]```
+**command: iatool list**
+
+Usage: ```iatool <host> list [options] [filter]```
 
 Display list of files on the player. If optional parameter *filter* is specified, only files that contains *filter* are listed.
 It is possible to specify the information that should be displayed on each file.
