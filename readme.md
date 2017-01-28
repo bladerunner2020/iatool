@@ -56,7 +56,7 @@ The following otions are available:
 The default options are *-psc*.
 
 Example:
-    ```
+```
     $ iatool <host> list -pstc
 ---------------------------------------------------------------------
 DOWNLOADPATH              | FILESIZE   | MIMETYPE         | COMPLETED
@@ -72,16 +72,17 @@ slideshow.smil            | 358        | application/smil | true
 media/video.mp4           | 1578331716 | video/mp4        | true     
 ---------------------------------------------------------------------
 Total: 9 file(s). Size: 2.55 Gb (2737081404 bytes)
-    ```
+```
 
 ```iatool <host> play <file>```
 
 Play specified file or external URL once. It could be a media file, SMIL playlist or html-page.
 It's possible to specify full path or file name or part of file name. 
 If more then one files match the criteria only one will be played.
-*NOTE:* it's also possible to specify external URL.
+**NOTE:** it's also possible to specify external URL.
 
 Examples:
+
 ```iatool <host> play media/image1.jpg
 iatool 192.168.2.12 play media/image1.jpg
 Playing: http://localhost:8080/v2/user-data/media/image1.jpg
@@ -90,10 +91,10 @@ Playing: http://localhost:8080/v2/user-data/media/image1.jpg
 ```iatool <host> play video.mp4
 iatool 192.168.2.12 play media/video.mp4
 Playing: http://localhost:8080/v2/user-data/media/video.mp4
-
 ```
 
 To play external URL:
+
 ```iatool <host> play http://www.auvix.ru
 Playing: http://www.auvix.ru
 ```
