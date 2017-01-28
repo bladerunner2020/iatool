@@ -17,9 +17,9 @@ var columnify = require('columnify');
 var path = require('path');
 var ProgressBar = require('progress');
 
-// TOOL_IADEA_HOST could be specified as an environment variable
+// IADEA_HOST could be specified as an environment variable
 // or in .ENV file
-var iadea_ip = process.env.TOOL_IADEA_HOST;
+var iadea_ip = process.env.IADEA_HOST;
 
 
 // If iadea IP is set we should parse it and remove from process.argv
@@ -34,7 +34,10 @@ if (ValidateIPaddress(argv[2])) {
     argv.splice(2, 1);
 }
 
-// Add commands and opitons processing
+// Add commands and onions processing
+program
+    .usage('<host> command [options]');
+
 program
     .command('info')
     .action(showInfo)
@@ -43,7 +46,7 @@ program
 program
     .command('list [filter]')
     .action(showFiles)
-    .description('display file list')
+    .description('display file list.')
     .option('-p, --downloadPath', 'add downloadPath to the list')
     .option('-i, --id', 'add file id to the list')
     .option('-s, --fileSize', 'add fileSize to the list')
@@ -51,12 +54,19 @@ program
     .option('-t, --mimeType', 'add mimeType to the list')
     .option('-d, --createdDate', 'add createdDate to the list')
     .option('-m, --modifiedDate', 'add modifiedDate to the list')
-    .option('-c, --completed', 'add completed flag to the list');
+    .option('-c, --completed', 'add completed flag to the list')
+    .on('--help', function() {
+        console.log('  Examples:');
+        console.log();
+        console.log('    $ iatool 192.168.1.111 list -pmsc');
+        console.log('');
+        console.log();
+    });
 
 program
     .command('play <file>')
     .action(playFile)
-    .description('play a media or smil file');
+    .description('play a local file or an external URL');
 
 program
     .command('display <status>')
@@ -86,10 +96,32 @@ program
     .option('-n, --incomplete', 'remove all icnomplete files');
 
 program
-    .command('upload <source> [destination')
+    .command('upload <source> [destination]')
     .action(uploadFile)
     .description('upload file');
 
+program
+    .command('reboot')
+    .action(rebootPlayer)
+    .description('reboot player');
+
+
+program.on('--help', function(){
+    console.log('  Examples:');
+    console.log();
+    console.log('  $ iatool --help');
+    console.log('  $ iatool list -help');
+    console.log('  $ iatool 192.168.1.111 info');
+    console.log();
+
+
+    console.log('  Environment variables:');
+    console.log('');
+    console.log('    IADEA_HOST=' + process.env.IADEA_HOST);
+    console.log('');
+    console.log('    NOTE: if IADEA_HOST is specified as an environment variable or in .ENV file,');
+    console.log('          host argument may be omitted. ')
+});
 
 program.parse(argv);
 
@@ -257,7 +289,8 @@ function showFiles(filter, options) {
 function playFile(file) {
 
     function PlayFile(file) {
-        return iadea.playFile(file.downloadPath);
+        var filename = file.downloadPath || file;
+        return iadea.playFile(filename);
     }
 
     function logResults(data) {
@@ -265,7 +298,11 @@ function playFile(file) {
     }
 
     return connect()
-        .then(function () {return iadea.findFileByName(file);})
+        .then(function () {
+            if (!file.includes('http'))
+                return iadea.findFileByName(file);
+            return file;
+        })
         .then(PlayFile)
         .then(logResults)
         .catch(logError);
@@ -451,4 +488,11 @@ function uploadFile(source, destination) {
         .progress(_logProgress)
         .then(console.log)
         .catch(logError);
+}
+
+function rebootPlayer() {
+    consol.log('Rebooting player');
+
+    return connect()
+        .then(iadea.reboot);
 }
