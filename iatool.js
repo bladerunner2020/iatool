@@ -106,6 +106,22 @@ program
     .action(rebootPlayer)
     .description('reboot player');
 
+program
+    .command('showconfig [name]')
+    .action(showConfig)
+    .description('show configuration settings')
+    .option('-s, --skipempty', 'skip empty settings');
+
+program
+    .command('setname <name>')
+    .action(setPlayerName)
+    .description('set player name');
+
+program
+    .command('setconfig <name> <value>')
+    .action(setConfig)
+    .description('set configuration parameter');
+
 
 program.on('--help', function(){
     console.log('  Examples:');
@@ -123,8 +139,17 @@ program.on('--help', function(){
     console.log('          host argument may be omitted. ')
 });
 
+program
+    .command('*')
+    .action(function(cmd){
+        console.log('Unknown command: ', cmd);
+    });
+
 program.parse(argv);
 
+// If no command display help
+if (argv.length < 3)
+    program.help();
 
 
 // First, checks if it isn't implemented yet.
@@ -499,8 +524,92 @@ function uploadFile(source, destination) {
  * Reboot player.
  */
 function rebootPlayer() {
-    consol.log('Rebooting player');
+    console.log('Rebooting player');
 
     return connect()
         .then(iadea.reboot);
+}
+
+/**
+ * Show configuration settings
+ * @param {String} name
+ * @param {Object} options
+ */
+function showConfig(name, options) {
+    function logResults(data) {
+        var res = data;
+        if (typeof(res) === 'string' ) res = JSON.parse(data);
+
+        var settings = res.userPref;
+        if (!settings) {
+            console.log("Error. Can't get current configuration.");
+            return;
+        }
+
+        for(var i = 0; i < settings.length; i++ ) {
+            var s = settings[i];
+
+            if (!name || (s.name.includes(name)))
+                logValue(s.name, s.value);
+ 
+        }
+    }
+
+    function logValue(n, v) {
+        var name = n;
+        var value = v;
+        if (name == 'app.start' || name == 'app.fallback') {
+            if (typeof(value) === 'string') value = JSON.parse(value);
+            value = value.uri;
+            name = name + ' (URI)';
+        }
+
+        if (!value) value = '';
+
+        if (value != '' || !options.skipempty)
+            console.log(name + ': ' + value);
+    }
+
+    return connect()
+        .then(iadea.exportConfiguration)
+        .then(logResults)
+        .catch(logError);
+}
+
+/**
+ * Set player name
+ * @param {String} newname
+ */
+function setPlayerName(newname) {
+    var cfg = {name: 'info.playerName', value: newname};
+
+    function logResult(data) {
+        if (data && data.restartRequired)
+            console.log('Done. Player restart required.')
+    }
+
+    return connect()
+        .then(function() {return iadea.importConfiguration(cfg, true);})
+        .then(logResult)
+        .catch(logError);
+}
+
+/**
+ * Set configuration parameter
+ * @param {String} name
+ * @param {String} value
+ */
+function setConfig(name, value) {
+    var cfg = {name: name, value: value};
+
+
+    function logResult(data) {
+        if (data && data.restartRequired)
+            console.log('Done. Player restart required.')
+    }
+
+    return connect()
+        .then(function() {return iadea.importConfiguration(cfg, true);})
+        .then(logResult)
+        .catch(logError);
 }

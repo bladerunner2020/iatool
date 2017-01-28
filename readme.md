@@ -30,6 +30,9 @@ List of available commands:
     fallback <file>                set content to play on critical errors 
     display <status>               turn display on/off
     reboot                         reboot player
+    showconfig [options] [name]    show configuration settings
+    setname <name>                 set player name
+    setconfig <name> <value>       set configuration parameter
 ```
 
 **iatool info**
@@ -207,6 +210,39 @@ Usage: ```$ iatool <host> display <status>```
 Usage: ```$ iatool <host> reboot```
 
 Reboot player.
+
+**iatool showconfig**
+
+Usage: ```$ iatool showconfig [options] [name]```
+    
+Show configuration settings. If optional paramet [name] is set only settings that includes [name] are shown.
+
+Available options:
+
+```
+    -h, --help       output usage information
+    -s, --skipempty  skip empty settings
+```
+
+**iatool setname**
+
+Usage: ```$ iatool setname <name>```
+
+Set the  player name.
+
+**iatool setconfig**
+
+Usage: ```$ iatool setconfig <name> <value>```
+
+Set configuration parameter.
+
+Example - set time zone. Informatoin about time zones could be taken [here](http://www.a-smil.org/index.php/Timezone_List)
+
+```
+    $ iatool setconfig time.timeZone Europe/Moscow    
+             
+    Done. Player restart required.
+```
 
 
 ### Contribution ###
