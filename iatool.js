@@ -16,6 +16,7 @@ var program = require('commander');
 var columnify = require('columnify');
 var path = require('path');
 var ProgressBar = require('progress');
+var fs = require('fs');
 
 // IADEA_HOST could be specified as an environment variable
 // or in .ENV file
@@ -121,6 +122,12 @@ program
     .command('setconfig <name> <value>')
     .action(setConfig)
     .description('set configuration parameter');
+
+program
+    .command('screenshot <file>')
+    .action(saveScreenShot)
+    .description('save screenshot to file')
+    .option('-o, --overwrite', 'overwrite existing file');
 
 
 program.on('--help', function(){
@@ -612,4 +619,40 @@ function setConfig(name, value) {
         .then(function() {return iadea.importConfiguration(cfg, true);})
         .then(logResult)
         .catch(logError);
+}
+
+/**
+ * Save screen shot to file
+ * @param {String} file
+ * @param {Object} options 
+ */
+function saveScreenShot(file, options) {
+
+    function writeFile(data) {
+        fs.writeFile(filename, data, 'binary', function (err) {
+
+            if (err) return err;
+            console.log('Screenshot saved to ' + filename);
+        });
+    }
+
+    var filename = file;
+
+    var extension = filename.split('.').pop();
+    if ((extension == '') || (extension == filename)) filename = filename + '.jpg';
+
+
+    fs.exists(filename, function (exists) {
+        if(exists && !options.overwrite)
+        {
+            logError(new Error('Error. Cannot write file ' + filename + ': file already exist. Use --overwrite option.'));
+        }else
+        {
+            return connect()
+                .then(iadea.getScreenshot)
+                .then(writeFile)
+                .catch(logError);
+        }
+    });
+    
 }

@@ -33,6 +33,7 @@ List of available commands:
     showconfig [options] [name]    show configuration settings
     setname <name>                 set player name
     setconfig <name> <value>       set configuration parameter
+    screenshot [options] <file>    save screenshot to file
 ```
 
 **iatool info**
@@ -243,7 +244,18 @@ Example - set time zone. Informatoin about time zones could be taken [here](http
              
     Done. Player restart required.
 ```
+**iatool screenshot**
 
+Usage: ```$ iatool screenshot [options] <file>```
+
+Save screenshot to file.
+
+Available options:
+
+```
+    -h, --help       output usage information
+    -o, --overwrite  overwrite existing file
+```
 
 ### Contribution ###
 
