@@ -85,7 +85,9 @@ program
 program
     .command('upload <source> [destination]')
     .action(uploadFile)
-    .description('upload file');
+    .description('upload file')
+    .option('-s, --silent', 'hide all progress info during upload')
+    .option('-n, --nobar', 'hide progress bar');
 
 program
     .command('autostart <file>')
@@ -450,37 +452,61 @@ function removeFile(file, options) {
     
 }
 
-var bar = null;
-var last_done = 0;
-function _logProgress(data) {
- //   process.stdout.write('Downloading ' + data.done of data.size... \r');
 
-    // If file is uploaded in one go skip progress bar
-    if ((bar == null) && (data.percent == 1)) return;
-
-    if (!bar)
-        bar = new ProgressBar('Uploading :current [:bar] :percent :etas', {
-            complete: '█',
-            incomplete: '░',
-            width: 20,
-            total: data.size
-        });
-
-
-    bar.tick(data.done - last_done);
-    last_done = data.done;
-}
 
 /**
  * Upload file
  * @param {String} source - file to upload
  * @param {String} destination - optional
+ * @param {Object} options
  */
-function uploadFile(source, destination) {
+function uploadFile(source, destination, options) {
+    var silent  = options.silent;
+    var nobar = options.nobar;
     var filename = source.replace(/^.*(\\|\/|\:)/, '');
     var extension = filename.split('.').pop();
 
     var downloadPath = destination;
+    var bar = null;
+    var last_done = 0;
+    var start_time = Date.now();
+
+    var _logProgress = function(data) {
+        if (nobar) {
+            process.stdout.write('Downloading ' + data.done + ' of ' + data.size + '...\r');
+            return;
+        }
+
+        // If file is uploaded in one go skip progress bar
+        if ((bar == null) && (data.percent == 1)) return;
+
+        if (!bar)
+            bar = new ProgressBar('Uploading :current [:bar] :percent :etas', {
+                complete: '█',
+                incomplete: '░',
+                width: 20,
+                total: data.size
+            });
+
+
+        bar.tick(data.done - last_done);
+        last_done = data.done;
+    };
+    if (silent) _logProgress = null; // don't output any information is silent mode
+    
+    var _logResults = function (data) {
+        if (typeof(data) == 'string') data = JSON.parse(data);
+
+        var end_time = Date.now();
+        var elapsed = Math.floor((end_time - start_time)/1000);
+        console.log(data);
+        var status = (data.completed) ? 'successful' : 'failed';
+        
+        console.log('Uploaded: ' + data.downloadPath + ' (' + data.fileSize + ' bytes) - ' + status);
+        console.log('Elapsed: ' + elapsed + ' s');
+    };
+
+
     if (typeof(downloadPath) === 'undefined') {downloadPath = filename;}
 
     var dest_filename = downloadPath.replace(/^.*(\\|\/|\:)/, '');
@@ -523,7 +549,7 @@ function uploadFile(source, destination) {
     return connect()
         .then(function() {return iadea.uploadFile(source, dest_path + dest_filename);})
         .progress(_logProgress)
-        .then(console.log)
+        .then(_logResults)
         .catch(logError);
 }
 
