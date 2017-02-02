@@ -11,16 +11,20 @@
  */
 
 require('dotenv').config(); // should be on top
-var iadea =require('iadea-rest');
+var IR =require('iadea-rest');
 var program = require('commander');
 var columnify = require('columnify');
 var path = require('path');
 var ProgressBar = require('progress');
 var fs = require('fs');
+var Q = require('q');
 
 // IADEA_HOST could be specified as an environment variable
 // or in .ENV file
 var iadea_ip = process.env.IADEA_HOST;
+var iadea_port = process.env.IADEA_PORT || 8080;
+var iadea_user = process.env.IADEA_USER || 'admin';
+var iadea_pass = process.env.IADEA_PASS || 'pass';
 
 
 // If iadea IP is set we should parse it and remove from process.argv
@@ -32,12 +36,21 @@ var argv = process.argv;
 // Note: domain names are not supported.
 if (ValidateIPaddress(argv[2])) {
     iadea_ip = argv[2];
+    var port = iadea_ip.split(':').pop();
+    if (port == iadea_ip) port = '';
+        else iadea_ip = iadea_ip.substring(0, iadea_ip.indexOf(port)-1);
+    iadea_port = port || iadea_port;
     argv.splice(2, 1);
 }
 
+var iadea = null;
+
+
 // Add commands and onions processing
 program
-    .usage('<host> command [options]');
+    .usage('<host>[:port] [options] command')
+    .option('-U, --user <user>', 'set user name')
+    .option('-P, --pass <pass>', 'set user password');
 
 program
     .command('info')
@@ -131,6 +144,11 @@ program
     .description('save screenshot to file')
     .option('-o, --overwrite', 'overwrite existing file');
 
+program
+    .command('find')
+    .action(findIadeaDevices)
+    .description('find all Iadea devices');
+
 
 program.on('--help', function(){
     console.log('  Examples:');
@@ -140,16 +158,19 @@ program.on('--help', function(){
     console.log('  $ iatool 192.168.1.111 info');
     console.log();
     
-    console.log('  Environment variables:');
+    console.log('  Optional environment variables:');
     console.log('');
-    console.log('    IADEA_HOST=' + process.env.IADEA_HOST);
+    console.log('    IADEA_HOST=' + (process.env.IADEA_HOST || ''));
+    console.log('    IADEA_PORT=' + (process.env.IADEA_PORT || ''));
+    console.log('    IADEA_USER=' + (process.env.IADEA_USER || ''));
+    console.log('    IADEA_PASS=' + (process.env.IADEA_PASS || ''));
     console.log('');
     console.log('    NOTE: if IADEA_HOST is specified as an environment variable or in .ENV file,');
     console.log('          host argument may be omitted. ')
 });
 
 program
-    .command('*')
+    .command('*', '', {noHelp: true})
     .action(function(cmd){
         console.log('Unknown command: ', cmd);
     });
@@ -180,7 +201,7 @@ if (!String.prototype.format) {
  * @return {Boolean}
  */
 function ValidateIPaddress(ipaddress) {
-    return (/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(ipaddress));
+    return (/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(:[0-9]+)?$/.test(ipaddress));
 }
 
 /**
@@ -188,6 +209,12 @@ function ValidateIPaddress(ipaddress) {
  * @promise {String} access token
  */
 function connect() {
+    var user = program.user || iadea_user;
+    var pass = program.pass || iadea_pass;
+
+    if (!iadea)
+        iadea = IR.createDevice(iadea_ip, iadea_port, user, pass);
+
     return iadea.connect(iadea_ip);
 }
 
@@ -196,11 +223,15 @@ function connect() {
  * @param {Error} err
  */
 function logError(err) {
+    console.log();
     var message = err;
     if (err.message) message = err.message;
     switch (err.code) {
         case 'ECONNREFUSED':
             message = 'Cannot {0} to {1}:{2} ({3})'.format(err.syscall, err.address, err.port, err.errno);
+            break;
+        case 'EPIPE':
+            message = 'Error writing to pipe (connection is lost)';
             break;
         default:
     }
@@ -681,4 +712,53 @@ function saveScreenShot(file, options) {
         }
     });
     
+}
+
+
+/**
+ * Do search for iadea devices in the current ip segment
+ */
+function findIadeaDevices() {
+    require('dns').lookup(require('os').hostname(), function (err, addr, fam) {
+        var found = [];
+        var promises = [];
+
+        function searchAll() {
+            var base_addess = addr.split('.');
+            base_addess = base_addess[0] + '.' + base_addess[1] + '.' + base_addess[2] + '.';
+
+            for (var i = 0; i < 255; i++) {
+                var ip = base_addess + i;
+                promises.push(searchIP(ip));
+            }
+
+            return Q.all(promises);
+        }
+
+        function searchIP(ip) {
+            var iadea = IR.createDevice(ip, iadea_port, iadea_user, iadea_pass);
+            return iadea.connect().then(iadea.getModelInfo).then(onFound.bind({ip : ip})).catch(onNotFound);
+        }
+
+        function onFound(data) {
+            var s = this.ip  + ' (' + data.modelName + ')';
+            found.push(s);
+        }
+
+        function onNotFound(data) {
+
+        }
+
+        if (err) return logError(err);
+
+
+        searchAll().then(function() {
+            console.log ("Found " + found.length + ' device(s):');
+            for (var i = 0; i < found.length; i++) {
+                console.log('   ' + found[i]);
+            }
+        })
+
+    })
+
 }

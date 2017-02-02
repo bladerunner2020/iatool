@@ -16,10 +16,12 @@
     "iatool": "./iatool.js"
   },
   "dependencies": {
+    "Q": "0.0.1",
     "columnify": "^1.5.4",
     "commander": "^2.9.0",
     "dotenv": "^4.0.0",
     "iadea-rest": "git+https://bladerunner2020@bitbucket.org/bladerunner2020/iadea-rest.git",
-    "progress": "^1.1.8"
+    "progress": "^1.1.8",
+    "q": "^1.4.1"
   }
 }

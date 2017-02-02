@@ -7,14 +7,25 @@ To use iadea-tool [NODE.JS](https://nodejs.org/) should be installed.
 
 To install iadea-tool:
 ```
-    $ npm install --global iadea-tool
+    $ sudo npm install --global iadea-tool
 ```
 
 ### Usage examples ###
-General usage: ```$ iatool <host> [command] [options]```
+General usage: ```$ iatool <host>[:port] [options] command```
 
-host - ip address of IAdea media player or signboard. 
+<host>[:port] - ip address and port of IAdea media player or signboard. Port is optional, default value is 8080.
+
+*IADEA_HOST*, *IADEA_PORT*, *IADEA_USER*, *IADEA_PASS* could be specified as environment variables or in **.ENV** file.
+
 **NOTE:** if *IADEA_HOST* is specified as an environment variable or in **.ENV** file, host argument may be omitted.
+
+**common options**
+
+``` 
+    -h, --help         output usage information
+    -U, --user <user>  set user name
+    -P, --pass <pass>  set user password
+``` 
 
 **commands**
 
@@ -34,17 +45,18 @@ List of available commands:
     setname <name>                 set player name
     setconfig <name> <value>       set configuration parameter
     screenshot [options] <file>    save screenshot to file
+    find                           find all IAdea devices
 ```
 
 **iatool info**
 
-Usage: ```$ iatool <host> info```
+Usage: ```$ iatool <host>[:port] info```
 
 show information on the player (model, firmware, storage, etc).
 
 **iatool list**
 
-Usage: ```$ iatool <host> list [options] [filter]```
+Usage: ```$ iatool <host>[:port] list [options] [filter]```
 
 Display list of files on the player. If optional parameter *filter* is specified, only files that contains *filter* are listed.
 It is possible to specify the information that should be displayed on each file.
@@ -67,7 +79,7 @@ The default options are *-psc*.
 
 *Example:*
 ```
-    $ iatool <host> list -pstc
+    $ iatool 192.168.1.11 list -pstc
     
     ---------------------------------------------------------------------
     DOWNLOADPATH              | FILESIZE   | MIMETYPE         | COMPLETED
@@ -87,7 +99,7 @@ The default options are *-psc*.
 
 **iatoop play**
 
-Usage: ```$ iatool <host> play <file>```
+Usage: ```$ iatool <host>[:port] play <file>```
 
 Play specified file or external URL once. It could be a media file, SMIL playlist or html-page.
 It's possible to specify full path or file name or part of file name. 
@@ -97,13 +109,13 @@ If more then one files match the criteria only one will be played.
 *Examples:*
 
 ```
-    $ iatool <host> play media/image1.jpg
+    $ iatool 192.168.1.11 play media/image1.jpg
     
     Playing: http://localhost:8080/v2/user-data/media/image1.jpg
 ```
 
 ```
-    $ iatool <host> play video.mp4
+    $ iatool 192.168.1.11 play video.mp4
     
     Playing: http://localhost:8080/v2/user-data/media/video.mp4
 ```
@@ -111,20 +123,20 @@ If more then one files match the criteria only one will be played.
 To play external URL:
 
 ```
-    $ iatool <host> play http://www.auvix.ru
+    $ iatool 192.168.1.11 play http://www.auvix.ru
     
     Playing: http://www.auvix.ru
 ```
 
 **iatool switch**
 
-Usage: ```$ iatool <host> switch```
+Usage: ```$ iatool <host>[:port] switch```
 
 Switch to play the default content (it can be set with autostart command).
 
 **iatool remove**
 
-Usage: ```$ iatool <host> remove [options] [file]```
+Usage: ```$ iatool <host>[:port] remove [options] [file]```
 
 Remove file(s) matching the criteria. If no options set it searches for files matching *<file>* and remove them.
 Available options:
@@ -138,7 +150,7 @@ Available options:
 *Examples:*
 
 ```
-    $ iatool <host> remove --id E4A7E415121366A8453916ECD6FBF144
+    $ iatool 192.168.1.11 remove --id E4A7E415121366A8453916ECD6FBF144
     
     Removing file by id: E4A7E415121366A8453916ECD6FBF144
 ```
@@ -146,7 +158,7 @@ Available options:
 Remove file with specified ID. ID could be determined by list command (```$ iatool <host> list -pic```).
 
 ```
-    $ iatool <host> remove --incomplete                         
+    $ iatool 192.168.1.11 remove --incomplete                         
     
     Removing all incomplete files.
 ```
@@ -155,7 +167,7 @@ Remove all files with flag *complete* set to false.
 
 **iatool upload**
 
-Usage: ```$ iatool <host> upload <source> [destination]```
+Usage: ```$ iatool <host>[:port]  upload <source> [destination]```
 
 Upload specified file (<source>) to IAdea media player.
 If [destination] is not specified the file will keep the name of ordinal file.
@@ -165,35 +177,35 @@ The target folder could be se in [destination].
 *Examples:*
 
 ```
-    $ iatool upload video.smil smil/
+    $ iatool 192.168.1.11 upload video.smil smil/
 ```
 
 Upload *video.smil* to */smil/video.smil*.
 
 
 ```
-    $ iatool upload video.mp4
+    $ iatool 192.168.1.11 upload video.mp4
 ```
 
 Upload *video.mp4* to */media/video.mp4*.
 
 **iatool autostart**
 
-Usage: ```$ iatool <host> autostart <file>```
+Usage: ```$ iatool <host>[:port]  autostart <file>```
 
 Set default content to play each time player boots up.
 See the description of **play** command for more details.
 
 **iatool fallback**
 
-Usage: ```$ iatool <host> fallback <file>```
+Usage: ```$ iatool <host>[:port]  fallback <file>```
 
 Set the content to play on critical errors.
 See the description of **play** command for more details.
 
 **iatool display**
 
-Usage: ```$ iatool <host> display <status>```
+Usage: ```$ iatool <host>[:port] display <status>```
 
 *<status>* could be *on* or *off*. Turn display on or off.
 
@@ -214,7 +226,7 @@ Reboot player.
 
 **iatool showconfig**
 
-Usage: ```$ iatool showconfig [options] [name]```
+Usage: ```$ iatool <host>[:port] showconfig [options] [name]```
     
 Show configuration settings. If optional paramet [name] is set only settings that includes [name] are shown.
 
@@ -227,13 +239,13 @@ Available options:
 
 **iatool setname**
 
-Usage: ```$ iatool setname <name>```
+Usage: ```$ iatool <host>[:port] setname <name>```
 
 Set the  player name.
 
 **iatool setconfig**
 
-Usage: ```$ iatool setconfig <name> <value>```
+Usage: ```$ iatool <host>[:port] setconfig <name> <value>```
 
 Set configuration parameter.
 
@@ -246,7 +258,7 @@ Example - set time zone. Informatoin about time zones could be taken [here](http
 ```
 **iatool screenshot**
 
-Usage: ```$ iatool screenshot [options] <file>```
+Usage: ```$ iatool <host>[:port] screenshot [options] <file>```
 
 Save screenshot to file.
 
@@ -256,6 +268,13 @@ Available options:
     -h, --help       output usage information
     -o, --overwrite  overwrite existing file
 ```
+
+**iatool find**
+
+Usage: ```$ iatool <host>[:port] find```
+
+Do search for all IAdea devices in the current network segment.
+
 
 ### Contribution ###
 
