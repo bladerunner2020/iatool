@@ -414,7 +414,7 @@ function switchDefault() {
  */
 function setStart(file, fallback) {
     function logResults(data) {
-        var message = fallback ? "Fallback: " : "Autostart: " + data.uri;
+        var message = (fallback ? "Fallback: " : "Autostart: ") + data.uri;
         console.log(message);
     }
 
@@ -530,7 +530,7 @@ function uploadFile(source, destination, options) {
 
         var end_time = Date.now();
         var elapsed = Math.floor((end_time - start_time)/1000);
-        console.log(data);
+        // console.log(data);
         var status = (data.completed) ? 'successful' : 'failed';
         
         console.log('Uploaded: ' + data.downloadPath + ' (' + data.fileSize + ' bytes) - ' + status);
