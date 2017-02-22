@@ -37,6 +37,7 @@ List of available commands:
     switch                         switch to play default content 
     remove [options] [file]        remove file(s) matching criteria
     upload <source> [destination]  upload file
+    replace <source> [destination] remove file on iadea device and upload new file 
     autostart <file>               set default content to play each time player boots up 
     fallback <file>                set content to play on critical errors 
     display <status>               turn display on/off
@@ -188,6 +189,15 @@ Upload *video.smil* to */smil/video.smil*.
 ```
 
 Upload *video.mp4* to */media/video.mp4*.
+
+**iatool upload**
+
+Usage: ```$ iatool <host>[:port]  replace <source> [destination]```
+
+Find and remove file on IAdea device and upload new file.
+If no file found on IAdea device or found more than one files operation cannot be completed.
+See also descripton of **upload** command.
+
 
 **iatool autostart**
 

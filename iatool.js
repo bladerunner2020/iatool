@@ -103,6 +103,13 @@ program
     .option('-n, --nobar', 'hide progress bar');
 
 program
+    .command('replace <source> [destination]')
+    .action(replaceFile)
+    .description('remove file on iadea device and upload new file')
+    .option('-s, --silent', 'hide all progress info during upload')
+    .option('-n, --nobar', 'hide progress bar');
+
+program
     .command('autostart <file>')
     .action(setAutostart)
     .description('set default content to play each time player boots up ');
@@ -483,7 +490,53 @@ function removeFile(file, options) {
     
 }
 
+function replaceFile(source, destination, options) {
+    var filename = source.replace(/^.*(\\|\/|\:)/, '');
+    //var extension = filename.split('.').pop();
 
+    if (typeof(destination) == 'string') filename = destination;
+
+    function findId(data) {
+        var files = data.items;
+        var found = [];
+
+        for (var i=0; i < files.length; i++) {
+            var name = files[i].downloadPath;
+
+            if (name.indexOf(filename) >= 0) found.push(files[i]);
+        }
+
+        switch (found.length) {
+            case 0:
+                console.log('File to replace not found on IAdea: ' + filename);
+                process.exit(1);
+                break;
+            case 1:
+                return found[0];
+                break;
+            
+            // > 1
+            default:
+                console.log('More than one file found: ' + filename);
+                console.log('replace can not be continued...');
+                process.exit(1);
+        }
+
+    }
+
+    function removeFileById(file) {
+        console.log('Removing file ' + file.downloadPath);
+        return iadea.deleteFiles(file.id);
+    }
+
+    return connect()
+        .then(function() { return iadea.getFileList()})
+        .then(findId)
+        .then(removeFileById)
+        .then(function(){uploadFile(source, destination, options);})
+        .catch(logError);
+    
+}
 
 /**
  * Upload file
