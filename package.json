@@ -14,7 +14,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://bladerunner2020@bitbucket.org/bladerunner2020/iadea-tool.git"
+    "url": "git+https://bladerunner2020@bitbucket.org/bladerunner2020/iadea-tool.git"
   },
   "bin": {
     "iatool": "./iatool.js"
@@ -26,5 +26,7 @@
     "iadea-rest": "git+https://bladerunner2020@bitbucket.org/bladerunner2020/iadea-rest.git",
     "progress": "^1.1.8",
     "q": "^1.4.1"
-  }
+  },
+  "homepage": "https://bitbucket.org/bladerunner2020/iadea-tool#readme",
+  "devDependencies": {}
 }
