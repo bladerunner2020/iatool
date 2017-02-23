@@ -1,6 +1,6 @@
 {
-  "name": "iadea-tool",
-  "version": "1.0.7",
+  "name": "iatool",
+  "version": "1.0.8",
   "description": "Command line tool to control Iadea players and signboards.",
   "main": "iatool.js",
   "scripts": {
@@ -12,10 +12,6 @@
   "keywords": [
     "iadea"
   ],
-  "repository": {
-    "type": "git",
-    "url": "git+https://bladerunner2020@bitbucket.org/bladerunner2020/iadea-tool.git"
-  },
   "bin": {
     "iatool": "./iatool.js"
   },
@@ -27,6 +23,13 @@
     "progress": "^1.1.8",
     "q": "^1.4.1"
   },
-  "homepage": "https://bitbucket.org/bladerunner2020/iadea-tool#readme",
-  "devDependencies": {}
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bladerunner2020/iatool.git"
+  },
+  "bugs": {
+    "url": "https://github.com/bladerunner2020/iatool/issues"
+  },
+  "homepage": "https://github.com/bladerunner2020/iatool#readme"
 }

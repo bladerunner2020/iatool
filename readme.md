@@ -1,13 +1,13 @@
 # README #
 
-A command line tool for IAdea players and signboards.
+A Command line tool for IAdea players and signboards.
 
 ### Installation ###
-To use iadea-tool [NODE.JS](https://nodejs.org/) should be installed.
+To use IAtool [NODE.JS](https://nodejs.org/) should be installed.
 
-To install iadea-tool:
+To install IAtool:
 ```
-    $ sudo npm install --global iadea-tool
+    $ sudo npm install --global iatool
 ```
 
 ### Usage examples ###
