@@ -12,6 +12,10 @@
   "keywords": [
     "iadea"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://bladerunner2020@bitbucket.org/bladerunner2020/iadea-tool.git"
+  },
   "bin": {
     "iatool": "./iatool.js"
   },
