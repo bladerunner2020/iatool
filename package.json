@@ -1,6 +1,6 @@
 {
   "name": "iadea-tool",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Command line tool to control Iadea players and signboards.",
   "main": "iatool.js",
   "scripts": {
@@ -23,7 +23,7 @@
     "columnify": "^1.5.4",
     "commander": "^2.9.0",
     "dotenv": "^4.0.0",
-    "iadea-rest": "git+https://bladerunner2020@bitbucket.org/bladerunner2020/iadea-rest.git",
+    "iadea-rest": "^1.0.6",
     "progress": "^1.1.8",
     "q": "^1.4.1"
   },
