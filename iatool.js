@@ -387,6 +387,11 @@ function playFile(file) {
  */
 function displayOn(status) {
     function log(data) {
+        if (data.error) {
+            console.log(data.error);
+            return;
+        }
+
         console.log('Current display status: ' + data[0].power);
         console.log('Turn display: ' + (on ? 'on' : 'off'));
 
