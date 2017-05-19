@@ -156,6 +156,11 @@ program
     .action(findIadeaDevices)
     .description('find all Iadea devices');
 
+program
+    .command('notify <event>')
+    .action(sendNotify)
+    .description('send notify event to Iadea device');
+
 
 program.on('--help', function(){
     console.log('  Examples:');
@@ -811,12 +816,24 @@ function findIadeaDevices() {
 
 
         searchAll().then(function() {
-            console.log ("Found " + found.length + ' device(s):');
+            console.log("Found " + found.length + ' device(s):');
             for (var i = 0; i < found.length; i++) {
                 console.log('   ' + found[i]);
             }
         })
 
     })
+}
+
+/**
+ * Save screen shot to file
+ * @param {String} event - string to send to Iadea device as notify parameter
+ * @param {Object} options
+ */
+function sendNotify(event, options) {
+    return connect()
+        .then(function() {return iadea.notify(event);})
+        .then(console.log)
+        .catch(logError);
 
 }

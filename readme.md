@@ -47,6 +47,7 @@ List of available commands:
     setconfig <name> <value>       set configuration parameter
     screenshot [options] <file>    save screenshot to file
     find                           find all IAdea devices
+    notify <event>                 send notify event to Iadea device
 ```
 
 **iatool info**
@@ -238,7 +239,7 @@ Reboot player.
 
 Usage: ```$ iatool <host>[:port] showconfig [options] [name]```
     
-Show configuration settings. If optional paramet [name] is set only settings that includes [name] are shown.
+Show configuration settings. If optional parameter [name] is set only settings that includes [name] are shown.
 
 Available options:
 
@@ -284,6 +285,13 @@ Available options:
 Usage: ```$ iatool <host>[:port] find```
 
 Do search for all IAdea devices in the current network segment.
+
+
+**iatool notify**
+
+Usage: ```$ iatool <host>[:port] notify <event>```
+
+Send notify *event* to Iadea device to trigger SMIL playlist.
 
 
 ### Contribution ###
