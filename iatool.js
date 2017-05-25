@@ -152,7 +152,7 @@ program
     .option('-o, --overwrite', 'overwrite existing file');
 
 program
-    .command('find')
+    .command('find [<host>]')
     .action(findIadeaDevices)
     .description('find all Iadea devices');
 
@@ -781,13 +781,14 @@ function saveScreenShot(file, options) {
 /**
  * Do search for iadea devices in the current ip segment
  */
-function findIadeaDevices() {
-    require('dns').lookup(require('os').hostname(), function (err, addr, fam) {
+function findIadeaDevices(host) {
+
+    function SearchAndLog(host) {
         var found = [];
         var promises = [];
 
-        function searchAll() {
-            var base_addess = addr.split('.');
+        function searchAll(host) {
+            var base_addess = host.split('.');
             base_addess = base_addess[0] + '.' + base_addess[1] + '.' + base_addess[2] + '.';
 
             for (var i = 0; i < 255; i++) {
@@ -812,16 +813,21 @@ function findIadeaDevices() {
 
         }
 
-        if (err) return logError(err);
-
-
-        searchAll().then(function() {
+        searchAll(host).then(function() {
             console.log("Found " + found.length + ' device(s):');
             for (var i = 0; i < found.length; i++) {
                 console.log('   ' + found[i]);
             }
         })
+    }
 
+
+    if (host) return SearchAndLog(host);
+
+    // Trying to define hostname
+    require('dns').lookup(require('os').hostname(), function (err, addr, fam) {
+        if (err) return logError(err);
+        SearchAndLog(addr);
     })
 }
 

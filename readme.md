@@ -46,7 +46,7 @@ List of available commands:
     setname <name>                 set player name
     setconfig <name> <value>       set configuration parameter
     screenshot [options] <file>    save screenshot to file
-    find                           find all IAdea devices
+    find [<host>]                  find all IAdea devices
     notify <event>                 send notify event to Iadea device
 ```
 
@@ -282,9 +282,9 @@ Available options:
 
 **iatool find**
 
-Usage: ```$ iatool <host>[:port] find```
+Usage: ```$ iatool find [<host>]```
 
-Do search for all IAdea devices in the current network segment.
+Do search for all IAdea devices in the *<host>* network segment. If *<host>* is omitted the search is done on the current segment.
 
 
 **iatool notify**
