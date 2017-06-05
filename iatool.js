@@ -311,10 +311,17 @@ function showInfo() {
 function showFiles(filter, options) {
     function logFiles(data) {
         var files = data.items;
-        var count = files.length;
+        var count = files ? files.length : 0;
         var columns = [];
         var maxWidth = 60;
         var size = 0;
+
+        if (count == 0) {
+            console.log('Storage seems empty.');
+            return;
+        }
+
+
 
         if (options.downloadPath) columns.push('downloadPath');
         if (options.id) columns.push('id');
