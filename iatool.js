@@ -58,6 +58,7 @@ program
     .description('show information on the player');
 
 program
+    .version(require('./package.json').version)
     .command('list [filter]')
     .action(showFiles)
     .description('display file list.')
@@ -68,14 +69,7 @@ program
     .option('-t, --mimeType', 'add mimeType to the list')
     .option('-d, --createdDate', 'add createdDate to the list')
     .option('-m, --modifiedDate', 'add modifiedDate to the list')
-    .option('-c, --completed', 'add completed flag to the list')
-    .on('--help', function() {
-        console.log('  Examples:');
-        console.log();
-        console.log('    $ iatool 192.168.1.111 list -pmsc');
-        console.log('');
-        console.log();
-    });
+    .option('-c, --completed', 'add completed flag to the list');
 
 program
     .command('play <file>')

@@ -1,6 +1,6 @@
 {
   "name": "iatool",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "description": "Command line tool to control Iadea players and signboards.",
   "main": "iatool.js",
   "scripts": {
