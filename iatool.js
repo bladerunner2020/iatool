@@ -156,6 +156,12 @@ program
     .description('send notify event to Iadea device');
 
 
+program
+    .command('setcolor <color>')
+    .action(setColor)
+    .description('set color of LED bar lights');
+
+
 program.on('--help', function(){
     console.log('  Examples:');
     console.log();
@@ -833,7 +839,7 @@ function findIadeaDevices(host) {
 }
 
 /**
- * Save screen shot to file
+ * Send notify event to Iadea device
  * @param {String} event - string to send to Iadea device as notify parameter
  * @param {Object} options
  */
@@ -842,5 +848,24 @@ function sendNotify(event, options) {
         .then(function() {return iadea.notify(event);})
         .then(console.log)
         .catch(logError);
+
+}
+
+/**
+ * Set color of LED bar lights
+ * @param color
+ */
+function setColor(color) {
+   if (color.charAt(0) !== '#') {
+       console.log('Wrong color specified. Use HMTL color codes. Example: #00FF00');
+       return
+   }
+
+   return connect()
+       .then(function() {return iadea.setColor(color);})
+       .then(console.log)
+       .catch(logError);
+
+
 
 }

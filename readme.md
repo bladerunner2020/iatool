@@ -48,6 +48,7 @@ List of available commands:
     screenshot [options] <file>    save screenshot to file
     find [<host>]                  find all IAdea devices
     notify <event>                 send notify event to Iadea device
+    setcolor <color>               set color of LED bar lights (XDS-1078)
 ```
 
 **iatool info**
@@ -292,6 +293,20 @@ Do search for all IAdea devices in the *<host>* network segment. If *<host>* is 
 Usage: ```$ iatool <host>[:port] notify <event>```
 
 Send notify *event* to Iadea device to trigger SMIL playlist.
+
+**iatool setcolor**
+
+Usage: ```$ iatool <host>[:port] setcolor <color>```
+
+Set color of LED bar lights. This command can be used with devices that has LED bar lights (e.g. Iadea XDS-1078).
+*color* is HTML color code. Should start with '#'
+
+*Example:*
+
+```
+    $ iatool <host> setcolor #FF0000   
+     
+```
 
 
 ### Contribution ###
