@@ -299,12 +299,12 @@ Send notify *event* to Iadea device to trigger SMIL playlist.
 Usage: ```$ iatool <host>[:port] setcolor <color>```
 
 Set color of LED bar lights. This command can be used with devices that has LED bar lights (e.g. Iadea XDS-1078).
-*color* is HTML color code. Should start with '#'
+*color* is HTML color code. 
 
 *Example:*
 
 ```
-    $ iatool <host> setcolor #FF0000   
+    $ iatool <host> setcolor FF0000   
      
 ```
 

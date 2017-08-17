@@ -856,10 +856,10 @@ function sendNotify(event, options) {
  * @param color
  */
 function setColor(color) {
-   if (color.charAt(0) !== '#') {
-       console.log('Wrong color specified. Use HMTL color codes. Example: #00FF00');
-       return
-   }
+   //if (color.charAt(0) !== '#') {
+   //    console.log('Wrong color specified. Use HMTL color codes. Example: #00FF00');
+   //    return
+   //}
 
    return connect()
        .then(function() {return iadea.setColor(color);})
