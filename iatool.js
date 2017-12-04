@@ -155,11 +155,20 @@ program
     .action(sendNotify)
     .description('send notify event to Iadea device');
 
-
 program
     .command('setcolor <color>')
     .action(setColor)
     .description('set color of LED bar lights');
+
+program
+    .command('consolenew <json...>')
+    .action(function(json) {ConsoleUpdate(json, true)})
+    .description('add configuration parameter (via console/new)');
+
+program
+    .command('consoleupdate <json>')
+    .action(function(json) {ConsoleUpdate(json, false)})
+    .description('update configuration parameter (via console/new)');
 
 
 program.on('--help', function(){
@@ -866,6 +875,45 @@ function setColor(color) {
        .then(console.log)
        .catch(logError);
 
+}
 
+/**
+ * Send request via /app/settings/com.iadea.console/update
+ * @param json_arr {Array} - new settings (JSON broke down to array)
+ *     Example: iatool <host> consolenew '{"settings": [ {"name": "autoTimeServer", "default": "ntp://host{:port}" } ] }'
+ * @param is_new - if true used - "/app/settings/com.iadea.console/new" instead
+ * @promis - return the default value configured above
+ */
+function ConsoleUpdate(json_arr, is_new) {
+    var s = mergeArguments(json_arr);
+    if (!s) {
+        console.log("Wrong json format.");
+        return;
+    }
+
+    return connect()
+        .then(function() {return is_new ? iadea.settingsConsoleNew(s) : iadea.settingsConsoleUpdate(s);})
+        .then(console.log)
+        .catch(logError);
 
 }
+
+function mergeArguments(arr) {
+    if (!arr.forEach) return null;
+
+    var s = '';
+    arr.forEach(function(e){
+        s += e;
+    });
+    
+    if (!nocheck) {
+        try {
+            return JSON.parse(s);
+        } catch (e) {
+            return null;
+        }
+    }
+
+    return s;
+}
+
