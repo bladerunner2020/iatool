@@ -15,11 +15,12 @@
   "bin": {
     "iatool": "./iatool.js"
   },
+  "bundledDependencies": ["columnify", "commander", "dotenv", "iadea-rest", "progress", "q"],
   "dependencies": {
     "columnify": "^1.5.4",
     "commander": "^2.11.0",
     "dotenv": "^4.0.0",
-    "iadea-rest": "^1.0.7",
+    "iadea-rest": "^1.0.8",
     "progress": "^1.1.8",
     "q": "^1.4.1"
   },
