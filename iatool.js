@@ -166,7 +166,7 @@ program
     .description('add configuration parameter (via console/new)');
 
 program
-    .command('consoleupdate <json>')
+    .command('consoleupdate <json...>')
     .action(function(json) {ConsoleUpdate(json, false)})
     .description('update configuration parameter (via console/new)');
 
@@ -244,7 +244,7 @@ function connect() {
  * @param {Error} err
  */
 function logError(err) {
-    console.log();
+    console.log(); //add empty line
     var message = err;
     if (err.message) message = err.message;
     switch (err.code) {
@@ -906,14 +906,12 @@ function mergeArguments(arr) {
         s += e;
     });
     
-    if (!nocheck) {
-        try {
-            return JSON.parse(s);
-        } catch (e) {
-            return null;
-        }
+
+    try {
+        return JSON.parse(s);
+    } catch (e) {
+        return null;
     }
 
-    return s;
 }
 
