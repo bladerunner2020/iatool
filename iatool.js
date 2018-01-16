@@ -644,6 +644,8 @@ function uploadFile(source, destination, options) {
             case 'smil':
             case 'smi':
                 break;
+            case 'apk':
+                dest_path = dest_path + 'upload/';
             default:
 
         }
