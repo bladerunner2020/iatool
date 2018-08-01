@@ -50,6 +50,7 @@ List of available commands:
     find [<host>]                  find all IAdea devices
     notify <event>                 send notify event to Iadea device
     setcolor <color>               set color of LED bar lights (XDS-1078)
+    password [pass]                update device password (reset if no argument specified)
 ```
 
 **iatool info**
@@ -323,6 +324,12 @@ Set color of LED bar lights. This command can be used with devices that has LED 
     $ iatool <host> setcolor FF0000   
      
 ```
+
+**iatool password**
+
+Usage: ```$ iatool <host>[:port] password [pass]```
+
+Update device password. If no argument is specified - reset default password (no password).
 
 
 ### Contribution ###

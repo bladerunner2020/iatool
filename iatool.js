@@ -175,6 +175,11 @@ program
     .action(function(json) {ConsoleUpdate(json, false)})
     .description('update configuration parameter (via console/new)');
 
+program
+    .command('password [password]')
+    .action(setPassword)
+    .description('update device password');
+
 
 program.on('--help', function(){
     console.log('  Examples:');
@@ -883,6 +888,16 @@ function sendNotify(event, options) {
         .catch(logError);
 
 }
+
+function setPassword(pass) {
+    return connect()
+        .then(function() {
+            return iadea.setPassword(pass);
+        })
+        .then(console.log)
+        .catch(logError);    
+}
+
 
 /**
  * Set color of LED bar lights
