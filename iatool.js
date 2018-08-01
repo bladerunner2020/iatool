@@ -236,7 +236,7 @@ function connect() {
     if (!iadea)
         iadea = IR.createDevice(iadea_ip, iadea_port, user, pass);
 
-    return iadea.connect(iadea_ip);
+    return iadea.connect();
 }
 
 /**
@@ -867,10 +867,9 @@ function sendNotify(event, options) {
  * @param color
  */
 function setColor(color) {
-   //if (color.charAt(0) !== '#') {
-   //    console.log('Wrong color specified. Use HMTL color codes. Example: #00FF00');
-   //    return
-   //}
+   if (color.charAt(0) !== '#') {
+       color = '#' + color;
+   }
 
    return connect()
        .then(function() {return iadea.setColor(color);})
