@@ -114,6 +114,11 @@ program
     .description('set content to play on critical errors ');
 
 program
+    .command('startapp <package> <class>')
+    .action(setAutostartApp)
+    .description('set autostart android apk');
+
+program
     .command('display <status>')
     .action(displayOn)
     .description('turn display on/off');
@@ -471,6 +476,22 @@ function setAutostart(file) {
     return setStart(file, false);
 }
 
+
+function setAutostartApp(packageName, className) {
+    var data = {
+        className: className,
+        packageName: packageName,
+        action: "android.intent.action.VIEW"
+    };
+    
+    return connect()
+        .then(function () {
+            return iadea.setStart(data, false);})
+        .then(console.log)
+        .catch(logError);    
+}
+
+
 /**
  * Set fallback content to play if error happnes
  */
@@ -672,7 +693,8 @@ function rebootPlayer() {
     console.log('Rebooting player');
 
     return connect()
-        .then(iadea.reboot);
+        .then(iadea.reboot)
+        .catch(logError);
 }
 
 /**

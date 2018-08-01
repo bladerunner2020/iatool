@@ -40,6 +40,7 @@ List of available commands:
     replace <source> [destination] remove file on iadea device and upload new file 
     autostart <file>               set default content to play each time player boots up 
     fallback <file>                set content to play on critical errors 
+    startapp <package> <class>     set autostart android apk
     display <status>               turn display on/off
     reboot                         reboot player
     showconfig [options] [name]    show configuration settings
@@ -214,6 +215,21 @@ Usage: ```$ iatool <host>[:port]  fallback <file>```
 
 Set the content to play on critical errors.
 See the description of **play** command for more details.
+
+**iatool startapp**
+
+Usage: ```$ iatool <host>[:port]  <package> <class>```
+Start Android apk automatically
+
+*Example:*
+
+```
+    $ iatool <host> "com.iridium.i3pro_v100" "com.iridium.mobile.i3_proas.IridiumActivity"   
+     
+    { packageName: 'com.iridium.i3pro_v100',
+      action: 'android.intent.action.VIEW',
+      className: 'com.iridium.mobile.i3_proas.IridiumActivity' }
+```
 
 **iatool display**
 
