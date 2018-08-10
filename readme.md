@@ -51,6 +51,7 @@ List of available commands:
     notify <event>                 send notify event to Iadea device
     setcolor <color>               set color of LED bar lights (XDS-1078)
     password [pass]                update device password (reset if no argument specified)
+    setrotation [rotation]         set rotation of the screen (0, 90, 180, 270, auto = default)
 ```
 
 **iatool info**
