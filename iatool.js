@@ -180,6 +180,12 @@ program
     .action(setPassword)
     .description('update device password');
 
+program
+    .command('setrotation [rotation]')
+    .action(setRotation)
+    .description('set rotation of the screen (0, 90, 180, 270, auto = default)');
+
+
 
 program.on('--help', function(){
     console.log('  Examples:');
@@ -896,6 +902,15 @@ function setPassword(pass) {
         })
         .then(console.log)
         .catch(logError);    
+}
+
+function setRotation(rotation) {
+    return connect()
+        .then(function() {
+            return iadea.setRotation(rotation);
+        })
+        .then(console.log)
+        .catch(logError);
 }
 
 
